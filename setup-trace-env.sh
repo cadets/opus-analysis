@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+pip install --user neo4j-driver==1.1.0
 
 # $1: Version $2: Destination Directory
 get_neo4j(){
@@ -13,7 +14,7 @@ get_neo4j 3.1.3 ~/neo4j3
 get_neo4j 2.3.10 ~/neo4j2
 
 ~/neo4j3/bin/neo4j start
-sleep 30
+/vagrant/opus-analysis/neo4j_up.py
 echo "CALL dbms.changePassword('opus');\n" | ~/neo4j3/bin/cypher-shell -uneo4j -pneo4j
 ~/neo4j3/bin/neo4j stop
 rm -r ~/neo4j3/data/databases/graph.db

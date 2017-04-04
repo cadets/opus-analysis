@@ -16,7 +16,7 @@ sleep 5
 sleep 5
 
 ~/neo4j3/bin/neo4j start
-sleep 60
+/vagrant/opus-analysis/neo4j_up.py
 
 python /vagrant/cadets-query-scripts/update-labels.py
 python /vagrant/cadets-query-scripts/get_complete_proc_tree.py > "${1%.json}_proc.json"
