@@ -16,10 +16,10 @@ sleep 5
 sleep 5
 
 ~/neo4j3/bin/neo4j start
-/vagrant/opus-analysis/neo4j_up.py
+/trace/neo4j_up.py
 
-python /vagrant/cadets-query-scripts/update-labels.py
-python /vagrant/cadets-query-scripts/get_complete_proc_tree.py > "${1%.json}_proc.json"
+python /trace/cadets-query-scripts/update-labels.py
+python /trace/cadets-query-scripts/get_complete_proc_tree.py > "${1%.json}_proc.json"
 
 rm pickled_tree.dat
 ~/neo4j3/bin/neo4j stop

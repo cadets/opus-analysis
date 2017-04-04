@@ -1,0 +1,10 @@
+[submodule "trace-data"]
+	path = trace-data
+	url = git@github.com:cadets/trace-data.git
+[submodule "cadets-query-scripts"]
+	path = cadets-query-scripts
+	url = git@gitlab.dtg.cl.cam.ac.uk:fresco-projects/cadets-query-scripts.git
+[submodule "opus-vm"]
+	path = opus-vm
+	url = git@gitlab.dtg.cl.cam.ac.uk:fresco-projects/opus-vm.git
+	branch = opus-trace-analysis

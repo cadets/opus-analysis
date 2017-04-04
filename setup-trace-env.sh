@@ -14,7 +14,7 @@ get_neo4j 3.1.3 ~/neo4j3
 get_neo4j 2.3.10 ~/neo4j2
 
 ~/neo4j3/bin/neo4j start
-/vagrant/opus-analysis/neo4j_up.py
+/trace/neo4j_up.py
 echo "CALL dbms.changePassword('opus');\n" | ~/neo4j3/bin/cypher-shell -uneo4j -pneo4j
 ~/neo4j3/bin/neo4j stop
 rm -r ~/neo4j3/data/databases/graph.db
