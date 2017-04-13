@@ -1,0 +1,37 @@
+#! /bin/bash
+set -e
+
+cd ~ 
+
+echo -n "Processing trace $1 : "
+opusctl server start > /dev/null
+opusctl server dtrace -u if="$1" > /dev/null
+opusctl server stop > /dev/null
+echo "Done"
+
+sleep 5
+
+echo -n "Upgrading DB to Neo4J 2 : "
+~/neo4j2/bin/neo4j start > /dev/null
+~/neo4j2/bin/neo4j stop > /dev/null
+echo "Done"
+
+sleep 5
+
+echo -n "Upgrading DB to Neo4J 3 : "
+~/neo4j3/bin/neo4j start > /dev/null
+/trace/neo4j_up.py
+echo "Done"
+
+echo -n "Applying node labels : "
+python /trace/cadets-query-scripts/update-labels.py
+sleep 30
+
+~/neo4j3/bin/neo4j stop > /dev/null
+echo "Done"
+
+echo -n "Dumping DB to $2 : "
+rm -f $2
+~/neo4j3/bin/neo4j-admin dump --database=prov.neo4j --to=$2
+rm -r prov.neo4j
+echo "Done"

@@ -1,0 +1,14 @@
+#! /bin/bash
+set -e
+
+. /trace/db.sh
+
+db_up $1
+
+echo -n "Running Proc Tree Analysis : "
+rm -f "${1%.db}_proc.json"
+python /trace/cadets-query-scripts/get_complete_proc_tree.py > "${1%.db}_proc.json"
+rm pickled_tree.dat
+echo "Done"
+
+db_down

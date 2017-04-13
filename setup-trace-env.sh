@@ -20,7 +20,9 @@ echo "CALL dbms.changePassword('opus');\n" | ~/neo4j3/bin/cypher-shell -uneo4j -
 rm -r ~/neo4j3/data/databases/graph.db
 
 ln -s ~/prov.neo4j ~/neo4j2/data/graph.db
-ln -s ~/prov.neo4j ~/neo4j3/data/databases/graph.db
+rm -f ~/neo4j3/data/databases
+ln -s ~ ~/neo4j3/data/databases
 
 sed -i -e's/\#allow_store_upgrade/allow_store_upgrade/' ~/neo4j2/conf/neo4j.properties
 sed -i -e's/\#dbms.allow_format_migration/dbms.allow_format_migration/' ~/neo4j3/conf/neo4j.conf
+sed -i -e's/\#dbms.active_database=graph.db/dbms.active_database=prov.neo4j/' ~/neo4j3/conf/neo4j.conf

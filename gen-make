@@ -1,0 +1,96 @@
+#! /usr/bin/env python3
+
+import os
+import sys
+import yaml
+
+make_file = """
+TRACE = /trace/trace
+ANALYSIS = /trace/analyse \\
+           /trace/cadets-query-scripts/get_complete_proc_tree.py
+
+DB_FILES = \\
+{db_files}
+
+ANALYSIS_FILES = \\
+{analysis_files}
+
+.PHONY: db analysis
+
+analysis : Makefile $(ANALYSIS_FILES)
+
+db : Makefile $(DB_FILES)
+
+Makefile : gen-make traces.yml
+	@echo "Makefile is stale, regenerating. Please re-run make."
+	@./gen-make
+	@false
+
+/trace/analysis/ : 
+	@mkdir $@
+
+/trace/analysis/%/ : /trace/analysis/
+	@mkdir $@
+
+{make_rules}
+"""
+
+trace_dir = "/trace/trace-data/{a}/cadets"
+
+db_file = "/trace/analysis/{a}/{b}.db"
+
+analysis_file = "/trace/analysis/{a}/{b}_proc.json"
+
+rule = """
+/trace/analysis/{a}/{b}.db : /trace/trace-data/{a}/cadets/{b}.json /trace/analysis/{a}/ $(TRACE)
+	@echo "Tracing $<"
+	@/trace/trace $< $@
+
+/trace/analysis/{a}/{b}_proc.json : /trace/analysis/{a}/{b}.db $(ANALYSIS)
+	@echo "Analysing $<"
+	@/trace/analyse $<
+"""
+
+src = "/trace/traces.yml"
+out = "/trace/Makefile"
+
+if len(sys.argv) > 1:
+    src = sys.argv[1]
+
+if len(sys.argv) > 2:
+    out = sys.argv[2]
+
+with open(src, "rb") as traces_yml:
+    traces = yaml.load(traces_yml)
+
+    files = []
+
+    for group in traces:
+        white = False
+        black = False
+        if "white" in traces[group]:
+            white = True
+            wlist = traces[group]['white']
+        elif "black" in traces[group]:
+            black = True
+            blist = traces[group]['black']
+
+        for f in os.listdir(trace_dir.format(a=group)):
+            tname = os.path.splitext(f)[0]
+            if((white and tname not in wlist) or
+               (black and tname in blist)):
+                continue
+            files += [(group, tname)]
+
+    db_files = " \\\n".join([db_file.format(a=a, b=b)
+                             for a, b in files])
+
+    analysis_files = " \\\n".join([analysis_file.format(a=a, b=b)
+                                   for a, b in files])
+
+    rules = "".join([rule.format(a=a, b=b) for a, b in files])
+
+    with open(out, "w") as make:
+        make.write(make_file.format(db_files=db_files,
+                                    analysis_files=analysis_files,
+                                    make_rules=rules))

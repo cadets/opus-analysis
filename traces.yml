@@ -1,0 +1,6 @@
+BasicOps:
+    black: ['stat']
+buildinject: {}
+git: {}
+misc: {}
+ripe_unit_tests_traces: {}

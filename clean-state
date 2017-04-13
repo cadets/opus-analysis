@@ -1,0 +1,6 @@
+#! /bin/bash
+
+~/opus-src/kill-backend.sh
+~/neo4j2/bin/neo4j stop > /dev/null
+~/neo4j3/bin/neo4j stop > /dev/null
+rm -rf ~/prov.neo4j
