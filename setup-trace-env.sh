@@ -4,7 +4,7 @@ pip install --user neo4j-driver==1.1.0
 
 # $1: Version $2: Destination Directory
 get_neo4j(){
-    curl https://neo4j.com/artifact.php?name=neo4j-community-$1-unix.tar.gz > $2.tar.gz
+    curl -sS https://neo4j.com/artifact.php?name=neo4j-community-$1-unix.tar.gz > $2.tar.gz
     tar -xzf $2.tar.gz -C ~
     rm $2.tar.gz
     mv ~/neo4j-community-$1 $2
@@ -20,7 +20,7 @@ echo "CALL dbms.changePassword('opus');\n" | ~/neo4j3/bin/cypher-shell -uneo4j -
 rm -r ~/neo4j3/data/databases/graph.db
 
 ln -s ~/prov.neo4j ~/neo4j2/data/graph.db
-rm -f ~/neo4j3/data/databases
+rm -rf ~/neo4j3/data/databases
 ln -s ~ ~/neo4j3/data/databases
 
 sed -i -e's/\#allow_store_upgrade/allow_store_upgrade/' ~/neo4j2/conf/neo4j.properties
